@@ -1,0 +1,66 @@
+.luckywheel {
+  position: relative;
+  margin: 30px auto;
+  width: fit-content;
+}
+
+.wheel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.wheel__wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.wheel__active {
+  position: absolute;
+  right: -3%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.wheel__btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.wheel__text-block {
+  width: 760px;
+  height: 760px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  color: white;
+  z-index: 100;
+}
+
+.wheel__text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: fit-content;
+  height: fit-content;
+}
+
+.wheel__text:nth-child(1) {
+  transform: rotate(0) translate(380px) rotate(0);
+}
+
+.wheel__text:nth-child(2) {
+  transform: rotate(0) translate(380px) rotate(0);
+}
+
+/*# sourceMappingURL=wheel.css.map */
