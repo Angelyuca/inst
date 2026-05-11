@@ -7,14 +7,8 @@ $(document).ready(() => {
 
     if (isInstagram && isIOS) {
         const url = window.location.href
-        window.location.href = url.replace('https://', 'ftp://');
-
-        // Либо через создание невидимой ссылки с атрибутом download
-        const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        link.download = 'true'; // На iOS это часто триггерит выход в Safari
-        link.click();
+        const cleanUrl = url.replace(/^https?:\/\//, '');
+        window.location.href = `googlechrome://${cleanUrl}`;
     }
 
 
