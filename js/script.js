@@ -2,59 +2,80 @@ import {useI18n} from './i18n.js';
 import {useWheelAnimation} from './animation.js';
 
 $(document).ready(() => {
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isInstagram = /Instagram/.test(ua) || /FBAN/.test(ua) || /FBAV/.test(ua);
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const isAndroid = /Android/.test(ua);
 
-    const modal = document.getElementById("iosBrowserModal");
-    const confirmBtn = document.getElementById("confirmExit");
-    const closeBtn = document.getElementById("closeModal");
 
-// 1. Показываем модалку сразу при заходе с iOS из Instagram
-    if (isInstagram && isIOS) {
-        setTimeout(() => {
-            modal.showModal();
-        }, 1000);
-    }
+    (function() {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const isInstagram = /Instagram|FBAN|FBAV/.test(ua);
+        const isIOS = /iPhone|iPad|iPod/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = /Android/.test(ua);
 
-// 2. Функция "выхода"
-    const triggerExit = () => {
-        const rawUrl = window.location.href.replace(/^https?:\/\//, "");
-        const fullUrl = window.location.href;
+        const modal = document.getElementById("iosBrowserModal");
+        const openBtn = document.getElementById("openBtn");
 
-        if (isAndroid) {
-            // Логика для Android: Intent вызывает окно выбора браузера
-            window.location.href = `intent://${rawUrl}#Intent;scheme=https;action=android.intent.action.VIEW;end`;
-        } else if (isIOS) {
-            // Логика для iOS: Техника Force Download через Blob
-            const content = `<html><scr` + `ipt>window.location.href="https://${rawUrl}";</scr` + `ipt></html>`;
-            const blob = new Blob([content], { type: 'application/octet-stream' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "open_in_safari.html";
-            a.click();
-            window.URL.revokeObjectURL(url);
-        } else {
-            // Обычный редирект для прочих
-            window.location.href = `https://${rawUrl}`;
+        // Функция генерации и "скачивания" файла для iOS
+        function forceSafariExit() {
+            const targetUrl = window.location.href;
+            // Создаем HTML-файл "на лету", который сделает редирект при открытии в Safari
+            const blobContent = `
+            <html>
+            <head><meta http-equiv="refresh" content="0;url=${targetUrl}"></head>
+            <body><script>window.location.href="${targetUrl}";<\/script></body>
+            </html>
+        `;
+            const blob = new Blob([blobContent], { type: 'application/octet-stream' });
+            const blobUrl = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = "open_website.html"; // Имя файла, которое увидит юзер
+            document.body.appendChild(link);
+            link.click();
+
+            // Очистка памяти
+            setTimeout(() => {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(blobUrl);
+            }, 100);
         }
-    };
 
-// Привязываем логику к кнопке из модалки
-    confirmBtn.onclick = () => {
-        modal.close();
-        triggerExit();
-    };
+        // Общая функция перехода
+        function handleExit() {
+            if (isAndroid) {
+                // Для Android используем Intent (вызывает окно выбора браузера)
+                const cleanUrl = window.location.href.replace(/^https?:\/\//, "");
+                window.location.href = `intent://${cleanUrl}#Intent;scheme=https;action=android.intent.action.VIEW;end`;
+            } else if (isIOS) {
+                // Для iOS запускаем метод с файлом
+                forceSafariExit();
+            } else {
+                // Если мы не в мобильном приложении, просто обновляем страницу
+                window.location.reload();
+            }
+        }
 
-    closeBtn.onclick = () => modal.close();
+        // Логика появления модалки только для iOS + Instagram
+        if (isInstagram && isIOS && modal) {
+            setTimeout(() => {
+                modal.showModal();
+            }, 800); // Небольшая задержка для естественности
+        }
 
-// Привязываем логику к вашей основной кнопке на странице
-    document.getElementById("openBtn").onclick = (e) => {
-        e.preventDefault();
-        triggerExit();
-    };
+        // Слушатели событий
+        if (openBtn) {
+            openBtn.onclick = (e) => {
+                e.preventDefault();
+                handleExit();
+            };
+        }
+
+        document.getElementById("confirmExit").onclick = () => {
+            modal.close();
+            handleExit();
+        };
+
+        document.getElementById("closeModal").onclick = () => modal.close();
+    })();
 
     const currencies = [''];
     const currentCurrency = currencies[0];
