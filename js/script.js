@@ -6,14 +6,12 @@ $(document).ready(() => {
     const isIOS = /iPhone|iPad|iPod/.test(navigator.platform);
 
     if (isInstagram && isIOS) {
+        alert('GO!')
         document
             .getElementById("openBtn")
             .onclick = () => {
 
-            window.open(
-                window.location.href,
-                "_blank"
-            );
+            window.top.location.href = window.location.href;
 
         };
     }
