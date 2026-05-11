@@ -42,11 +42,6 @@ $(document).ready(() => {
         }
     }
 
-// Привязываем к твоей кнопке openBtn
-    document.getElementById("openBtn").onclick = (e) => {
-        e.preventDefault();
-        openExternal();
-    };
 
 // Привязываем к кнопке в модалке
     document.getElementById("confirmExit").onclick = () => {
