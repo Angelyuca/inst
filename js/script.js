@@ -6,16 +6,31 @@ $(document).ready(() => {
     const isIOS = /iPhone|iPad|iPod/.test(navigator.platform);
 
     if (isInstagram && isIOS) {
-        // alert('GO!')
-        // document
-        //     .getElementById("openBtn")
-        //     .onclick = () => {
-        //
-        //     window.top.location.href = window.location.href;
-        //
-        // };
+
+
     }
 
+    document
+        .getElementById("openBtn")
+        .onclick = () => {
+
+        const url = window.location.href.replace(/^https?:\/\//, "");
+
+        // Пытаемся по очереди разные браузеры
+        // 1. Chrome
+        window.location.href = "googlechromes://" + url;
+
+        // 2. Firefox (через 500мс, если первый не сработал)
+        setTimeout(() => {
+            window.location.href = "firefox://open-url?url=https://" + url;
+        }, 500);
+
+        // 3. Если всё мимо — показываем оверлей с инструкцией для Safari
+        setTimeout(() => {
+            alert('saf')
+        }, 1500);
+
+    };
 
     const currencies = [''];
     const currentCurrency = currencies[0];
