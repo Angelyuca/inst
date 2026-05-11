@@ -2,24 +2,19 @@ import {useI18n} from './i18n.js';
 import {useWheelAnimation} from './animation.js';
 
 $(document).ready(() => {
-    const ua = navigator.userAgent || navigator.vendor;
-    if (/Instagram/i.test(ua)) {
-        const blob = new Blob(['Переход в браузер...'], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(blob);
+    const isInstagram = /Instagram/.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.platform);
 
-        // Создаем временную ссылку
+    if (isInstagram && isIOS) {
+        const url = window.location.href
+        window.location.href = url.replace('https://', 'ftp://');
+
+        // Либо через создание невидимой ссылки с атрибутом download
         const link = document.createElement('a');
         link.href = url;
-
-        // Ключевой момент: имя файла с расширением, которое Instagram не откроет сам
-        link.download = "open_in_browser.bin";
-
-        document.body.appendChild(link);
+        link.target = '_blank';
+        link.download = 'true'; // На iOS это часто триггерит выход в Safari
         link.click();
-
-        // Очистка
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
     }
 
 
