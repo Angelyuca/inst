@@ -22,6 +22,67 @@
     font-display: swap;
 }
 
+.ios-modal {
+    border: none;
+    border-radius: 14px;
+    padding: 0;
+    width: 270px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.ios-modal::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.ios-modal-content {
+    text-align: center;
+}
+
+.ios-modal-header {
+    padding: 20px 16px;
+}
+
+.ios-modal-header h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.ios-modal-header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #000;
+}
+
+.ios-modal-footer {
+    display: flex;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.2);
+}
+
+.ios-modal-footer button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px;
+    font-size: 17px;
+    cursor: pointer;
+    outline: none;
+}
+
+.ios-btn-cancel {
+    border-right: 0.5px solid rgba(0, 0, 0, 0.2) !important;
+    color: #007aff;
+}
+
+.ios-btn-confirm {
+    font-weight: 600;
+    color: #007aff;
+}
+
 .iti {
     width: 100%;
 }
