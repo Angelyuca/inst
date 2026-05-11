@@ -2,14 +2,12 @@ import {useI18n} from './i18n.js';
 import {useWheelAnimation} from './animation.js';
 
 $(document).ready(() => {
-    // const isInstagram = /Instagram/.test(navigator.userAgent);
-    // const isIOS = /iPhone|iPad|iPod/.test(navigator.platform);
-    //
-    // if (isInstagram && isIOS) {
-    //     const url = window.location.href
-    //     const cleanUrl = url.replace(/^https?:\/\//, '');
-    //     window.location.href = `googlechrome://${cleanUrl}`;
-    // }
+    const isInstagram = /Instagram/.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.platform);
+
+    if (isInstagram && isIOS) {
+
+    }
 
 
     const currencies = [''];
