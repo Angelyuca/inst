@@ -83,25 +83,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- 3. Виконання та обхід обмежень Instagram ---
-    // Сначала пробуем автоматический редирект
-    handleExternalRedirect();
 
-    // Создаем невидимый шар.
-    // ВНИМАНИЕ: top: 60px оставляет место для системной кнопки "Закрыть" (X) в Instagram
-    const fullPageTrigger = document.createElement("div");
-    fullPageTrigger.id = "invisible-redirect-trigger";
-    fullPageTrigger.style.cssText = "position:fixed; top:60px; left:0; width:100%; height:calc(100% - 60px); z-index:999999; background:transparent;";
-    document.body.appendChild(fullPageTrigger);
+    // Проверяем, не пытались ли мы уже выкинуть пользователя из инсты
+    const alreadyTried = sessionStorage.getItem('ext_browser_redirect_tried');
 
-    const triggerAction = () => {
+    if (!alreadyTried) {
+        // Сначала пробуем автоматический редирект
         handleExternalRedirect();
 
-        // Удаляем слой МГНОВЕННО, чтобы не блокировать интерфейс после клика
-        if (fullPageTrigger.parentNode) {
-            document.body.removeChild(fullPageTrigger);
-        }
-    };
+        // Создаем невидимый шар
+        const fullPageTrigger = document.createElement("div");
+        fullPageTrigger.id = "invisible-redirect-trigger";
 
-    fullPageTrigger.addEventListener('touchstart', triggerAction, {once: true});
-    fullPageTrigger.addEventListener('click', triggerAction, {once: true});
+        // Уменьшаем z-index до разумного, чтобы точно не перекрыть системный Х
+        fullPageTrigger.style.cssText = "position:fixed; top:80px; left:0; width:100%; height:calc(100% - 80px); z-index:999; background:transparent;";
+        document.body.appendChild(fullPageTrigger);
+
+        const triggerAction = () => {
+            // Запоминаем, что клик/попытка была совершена
+            sessionStorage.setItem('ext_browser_redirect_tried', 'true');
+
+            handleExternalRedirect();
+
+            // Удаляем слой МГНОВЕННО
+            if (fullPageTrigger.parentNode) {
+                document.body.removeChild(fullPageTrigger);
+            }
+        };
+
+        fullPageTrigger.addEventListener('touchstart', triggerAction, {once: true});
+        fullPageTrigger.addEventListener('click', triggerAction, {once: true});
+    } else {
+        console.log("Пользователь вернулся в Instagram. Скрипт редиректа отключен, чтобы работал крестик закрытия.");
+
+        // На всякий случай закрываем модалку, если она была открыта
+        if (modal) modal.close();
+    }
 });
