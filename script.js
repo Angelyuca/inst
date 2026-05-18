@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // --- 1. Визначення пристрою та браузера ---
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const isAndroid = /Android/i.test(userAgent);
@@ -40,10 +40,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const checkBlur = () => {
             appOpened = true;
         };
-        window.addEventListener('blur', checkBlur, { once: true });
+        window.addEventListener('blur', checkBlur, {once: true});
         window.addEventListener('visibilitychange', () => {
             if (document.hidden) appOpened = true;
-        }, { once: true });
+        }, {once: true});
 
         // 1. Пробуем Chrome
         window.location.href = "googlechromes://" + currentUrl;
