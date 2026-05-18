@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const isAndroid = /Android/i.test(userAgent);
     const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
-    const isWebview = /FBAN|FBAV|FB_IAB|FBIOS|FB4A|Instagram|Telegram|tg\//i.test(userAgent);
-
-    if (!isWebview) return; // Выходим сразу, если это обычный браузер
+    // const isWebview = /FBAN|FBAV|FB_IAB|FBIOS|FB4A|Instagram|Telegram|tg\//i.test(userAgent);
+    //
+    // if (!isWebview) return; // Выходим сразу, если это обычный браузер
 
     const currentUrl = window.location.href.replace(/^https?:\/\//, "");
     const modal = document.getElementById("iosBrowserModal");
