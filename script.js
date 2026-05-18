@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmBtn = document.getElementById("confirmExit");
     const closeBtn = document.getElementById("closeModal");
 
+
     function iosTricks() {
         if (modal) {
             setTimeout(() => {
