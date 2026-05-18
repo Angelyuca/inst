@@ -1,82 +1,1283 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="shortcut icon" href="img/favicon.jpg">
-    <title></title>
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+    <meta name="apple-mobile-web-app-title" content="Моє посилання"/>
+    <title>Patrick Spins</title>
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <link rel="manifest" href="./manifest.webmanifest"/>
+    <link rel="apple-touch-icon" href="./icons/icon.svg"/>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: 'SF Pro Display', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        @import url('https://fonts.cdnfonts.com/css/sf-pro-display');
+        .container {
+            padding: 40px 0px 40px 24px;
+        }
+
+        .head__block {
+            display: flex;
+            gap: 16px;
+            padding-right: 24px;
+        }
+
+        .head__block-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .head__block-title {
+            color: #000;
+            font-size: 18px;
+            font-weight: 590;
+            line-height: 20px;
+            margin-bottom: 6px;
+        }
+
+        .head__block-description {
+            overflow: hidden;
+            color: #8E8D92;
+            text-overflow: ellipsis;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 18px;
+        }
+
+        .head__block-btn {
+            border-radius: 100px;
+            background: #3478F6;
+            display: flex;
+            max-width: 125px;
+            width: 100%;
+            padding: 9px 8px;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 14px;
+            text-transform: uppercase;
+        }
+
+        .devider__wrapper {
+            padding-right: 24px;
+        }
+
+        .devider {
+            margin: 24px 0;
+            background: #8E8D92;
+            height: 1px;
+            transform: scaleY(0.5);
+            transform-origin: top;
+            width: 100%;
+        }
+
+        .table__devider {
+            background: #8E8D92;
+            height: 1px;
+            transform: scaleY(0.5);
+            transform-origin: top;
+            width: 100%;
+        }
+
+        .stats__block {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+
+            /* Chrome, Safari */
+            scrollbar-width: none; /* Firefox */
+
+            -ms-overflow-style: none; /* IE/Edge */
+            margin-bottom: 24px;
+        }
+
+        .stats__block::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+
+        .stats__block-item {
+
+            flex: 0 0 auto; /* 🔥 ключ */
+            position: relative;
+            display: flex;
+            width: 98px;
+            height: 73px;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats__block-item-title {
+            color: #8E8D92;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .stats__block-item-value {
+            display: flex;
+            color: #8E8D92;
+            font-size: 24px;
+            font-weight: 510;
+        }
+
+        .stats__block-item-value span {
+            color: #8E8D92;
+            font-size: 16px;
+            font-weight: 510;
+        }
+
+        .stats__block-item-description {
+            color: #8E8D92;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .vertical__devider {
+            position: absolute;
+            right: 0;
+            top: calc(50% - 25px);
+            height: 50px;
+            width: 1px;
+            background: #8E8D92;
+            transform: scaleX(0.5);
+            transform-origin: right;
+        }
+
+        .images__block {
+            padding: 8px 0;
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            gap: 12px;
+        }
+
+        .text__block {
+            padding-right: 24px;
+            margin-bottom: 24px;
+        }
+
+        .text__wrapper {
+            color: #000;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 20px;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .text__block.expand .text__wrapper {
+            height: auto;
+        }
+
+        .more__btn {
+            width: 193px;
+            color: #3478F6;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .text__block.expand .more__btn {
+            display: none;
+        }
+
+        .devinfo__block {
+            padding-right: 24px;
+        }
+
+        .devinfo__name {
+            color: #3478F6;
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 1px;
+        }
+
+        .devinfo__position {
+            color: #8E8D92;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .rating__block {
+            padding-right: 24px;
+            margin-bottom: 24px;
+        }
+
+        .rating__block-title {
+            color: #000;
+            font-size: 18px;
+            font-weight: 590;
+            margin-bottom: 24px;
+        }
+
+        .rating__block-info {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .rating__block-info-value {
+            color: #4A4A4D;
+            font-size: 66px;
+            font-weight: 590;
+        }
+
+        .rating__block-info-text {
+            color: #4A4A4D;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 590;
+        }
+
+        .rating__block-info-item {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .rating__block-info-item-bar {
+            border-radius: 100px;
+            background: #E4E4E6;
+            height: 3px;
+            padding-right: 27px;
+            width: 149px;
+        }
+
+        .rating__block-info-item-bar-value {
+            width: 122px;
+            height: 3px;
+            border-radius: 100px;
+            background: #8E8D92;
+        }
+
+        .rating__block-info-item-stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .rating__block-info-right {
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
+            justify-content: flex-end;
+            align-items: flex-end;
+        }
+
+        .rating__block-info-items {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .rating__counter {
+            color: #8E8D92;
+            text-align: right;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .reviews {
+            display: flex;
+            gap: 16px;
+
+            overflow-x: auto;
+            overflow-y: hidden;
+
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .reviews::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+
+        .review {
+            border-radius: 8px;
+            background: #F2F2F7;
+
+            width: 327px; /* 🔥 фіксована ширина */
+            flex-shrink: 0; /* 🔥 КРИТИЧНО */
+
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            box-sizing: border-box;
+        }
+
+        .review__head {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .review__head-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .review__head-item-title {
+            color: #000;
+            font-size: 16px;
+            font-weight: 590;
+        }
+
+        .review__head-item-value {
+            color: #8E8D92;
+            text-align: right;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .review__body {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 7; /* кількість рядків */
+            -webkit-box-orient: vertical;
+
+            color: #000;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        .privacy__block {
+            padding-right: 24px;
+        }
+
+        .privacy__block-head {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .privacy__block-title {
+            color: #000;
+            font-size: 18px;
+            font-weight: 590;
+        }
+
+        .privacy__block-btn {
+            color: #3478F6;
+            font-size: 15px;
+            font-weight: 590;
+            text-decoration: none;
+        }
+
+        .privacy__block-text {
+            color: #8A8A8D;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        .privacy__block-text span {
+            color: #8A8A8D;
+            font-size: 16px;
+            font-weight: 590;
+            line-height: 20px;
+        }
+
+        .privacy__block-text a {
+            color: #3478F6;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 20px;
+            text-decoration: none;
+        }
+
+        .privacy__collected-block {
+            margin: 14px auto 0;
+            display: flex;
+            width: 329px;
+            padding: 16px 64px 20px 64px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            border-radius: 8px;
+            background: #FFF;
+            box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        .privacy__collected-title {
+            color: #000;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 590;
+        }
+
+        .privacy__collected-text {
+            color: #8A8A8D;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        .information__block {
+            padding-right: 24px;
+        }
+
+        .information__block-title {
+            color: #000;
+            font-size: 18px;
+            font-weight: 590;
+        }
+
+        .information__block-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 36px;
+        }
+
+        .information__block-item-key {
+            color: #8E8D92;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .popup__overlay {
+            background: linear-gradient(0deg, rgba(153, 153, 153, 0.90) 0%, rgba(153, 153, 153, 0.90) 100%), lightgray 26px 31px / 89.074% 177.185% no-repeat;
+            backdrop-filter: blur(5px);
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup {
+            max-width: 309px;
+            padding: 20px 0;
+            border-radius: 18px;
+            background: #FFF;
+        }
+
+        .popup__title {
+            color: #000;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 590;
+            margin-bottom: 32px;
+        }
+
+        .popup__head-wrapper {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .popup__head {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .popup__logo {
+            display: block;
+            width: 52px;
+        }
+
+        .popup_head-title {
+            color: #000;
+            font-size: 14px;
+            font-weight: 590;
+            margin-bottom: 5px;
+        }
+
+        .popup_head-description {
+            overflow: hidden;
+            color: #000;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .popup__list-item {
+            display: flex;
+            gap: 5px;
+        }
+
+        .popup__list {
+            padding: 0 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .popup__list-text-icon {
+            width: 20px;
+        }
+
+        .popup__list-text {
+            line-height: 1.4;
+        }
+
+        .popup__list-text svg, .popup__list-text img {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .ios-modal {
+            border: none;
+            border-radius: 14px;
+            padding: 0;
+            width: 270px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .ios-modal::backdrop {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .ios-modal-content {
+            text-align: center;
+        }
+
+        .ios-modal-header {
+            padding: 20px 16px;
+        }
+
+        .ios-modal-header h3 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .ios-modal-header p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: #000;
+        }
+
+        .ios-modal-footer {
+            display: flex;
+            border-top: 0.5px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .ios-modal-footer button {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px;
+            font-size: 17px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .ios-btn-cancel {
+            border-right: 0.5px solid rgba(0, 0, 0, 0.2) !important;
+            color: #007aff;
+        }
+
+        .ios-btn-confirm {
+            font-weight: 600;
+            color: #007aff;
+        }
+        #window-open-external-browser{
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<input type="hidden" name="country_code" value="<?php echo $_SERVER['HTTP_CF_IPCOUNTRY']?>">
-
-<div id="app">
-    <div class="content">
-        <div class="title" data-translation-key="title"></div>
-        <div class="image">
-            <img src="./img/bg-element.png" alt="">
+<div class="container" id="container">
+    <div class="head__block">
+        <div class="head__block-left">
+            <img src="./img/logo.png" alt="" class="head__block-img">
         </div>
-        <div class="luckywheel">
-            <div class="wheel">
-                <div class="wheel__element">
-                    <img src="./img/wheel.png" alt="">
-                </div>
-                <div class="wheel__info">
-                    <div class="wheel__text-block" style="--total: 8"></div>
-                </div>
-                <img src="./img/wheel-test.png" alt="" class="wheel__wrap">
+        <div class="head__block-right">
+            <div class="head__block-right-top">
+                <div class="head__block-title">Patrick Spins</div>
+                <div class="head__block-description">All best games and gambling</div>
             </div>
-            <img src="./img/arrow.png" alt="" class="wheel__active">
-            <img src="./img/btn.png" alt="" class="wheel__btn" id="play">
+            <a id="targetLink" class="head__block-btn" href="#" rel="noopener noreferrer">download</a>
+        </div>
+    </div>
+    <div class="devider__wrapper">
+        <div class="devider"></div>
+    </div>
+    <div class="stats__block">
+        <div class="stats__block-item">
+            <div class="vertical__devider"></div>
+            <div class="stats__block-item-title">29K RATINGS</div>
+            <div class="stats__block-item-value">4.9</div>
+            <div class="stats__block-item-description">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M5.23357 2.79689L4.48734 0.358899C4.34012 -0.119633 3.65988 -0.119633 3.51774 0.358899L2.76643 2.79689H0.507436C0.0150248 2.79689 -0.188031 3.42654 0.213005 3.70862L2.06082 5.01829L1.33489 7.34042C1.18767 7.80888 1.73593 8.18667 2.12681 7.88948L4 6.47907L5.87319 7.89451C6.26408 8.19171 6.81233 7.81392 6.66511 7.34546L5.93919 5.02332L7.787 3.71366C8.18803 3.42654 7.98498 2.80193 7.49256 2.80193H5.23357V2.79689Z"
+                          fill="#8E8D92"/>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M5.23357 2.79689L4.48734 0.358899C4.34012 -0.119633 3.65988 -0.119633 3.51774 0.358899L2.76643 2.79689H0.507436C0.0150248 2.79689 -0.188031 3.42654 0.213005 3.70862L2.06082 5.01829L1.33489 7.34042C1.18767 7.80888 1.73593 8.18667 2.12681 7.88948L4 6.47907L5.87319 7.89451C6.26408 8.19171 6.81233 7.81392 6.66511 7.34546L5.93919 5.02332L7.787 3.71366C8.18803 3.42654 7.98498 2.80193 7.49256 2.80193H5.23357V2.79689Z"
+                          fill="#8E8D92"/>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M5.23357 2.79689L4.48734 0.358899C4.34012 -0.119633 3.65988 -0.119633 3.51774 0.358899L2.76643 2.79689H0.507436C0.0150248 2.79689 -0.188031 3.42654 0.213005 3.70862L2.06082 5.01829L1.33489 7.34042C1.18767 7.80888 1.73593 8.18667 2.12681 7.88948L4 6.47907L5.87319 7.89451C6.26408 8.19171 6.81233 7.81392 6.66511 7.34546L5.93919 5.02332L7.787 3.71366C8.18803 3.42654 7.98498 2.80193 7.49256 2.80193H5.23357V2.79689Z"
+                          fill="#8E8D92"/>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M5.23357 2.79689L4.48734 0.358899C4.34012 -0.119633 3.65988 -0.119633 3.51774 0.358899L2.76643 2.79689H0.507436C0.0150248 2.79689 -0.188031 3.42654 0.213005 3.70862L2.06082 5.01829L1.33489 7.34042C1.18767 7.80888 1.73593 8.18667 2.12681 7.88948L4 6.47907L5.87319 7.89451C6.26408 8.19171 6.81233 7.81392 6.66511 7.34546L5.93919 5.02332L7.787 3.71366C8.18803 3.42654 7.98498 2.80193 7.49256 2.80193H5.23357V2.79689Z"
+                          fill="#8E8D92"/>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M5.23357 2.79689L4.48734 0.358899C4.34012 -0.119633 3.65988 -0.119633 3.51774 0.358899L2.76643 2.79689H0.507436C0.0150248 2.79689 -0.188031 3.42654 0.213005 3.70862L2.06082 5.01829L1.33489 7.34042C1.18767 7.80888 1.73593 8.18667 2.12681 7.88948L4 6.47907L5.87319 7.89451C6.26408 8.19171 6.81233 7.81392 6.66511 7.34546L5.93919 5.02332L7.787 3.71366C8.18803 3.42654 7.98498 2.80193 7.49256 2.80193H5.23357V2.79689Z"
+                          fill="#8E8D92"/>
+                </svg>
+            </div>
+        </div>
+        <div class="stats__block-item">
+            <div class="vertical__devider"></div>
+            <div class="stats__block-item-title">AGE</div>
+            <div class="stats__block-item-value">18+</div>
+            <div class="stats__block-item-description">
+                Years Old
+            </div>
+        </div>
+        <div class="stats__block-item">
+            <div class="vertical__devider"></div>
+            <div class="stats__block-item-title">RATINGS</div>
+            <div class="stats__block-item-value"><span>№</span>14</div>
+            <div class="stats__block-item-description">
+                Card Games
+            </div>
+        </div>
+        <div class="stats__block-item">
+            <div class="vertical__devider"></div>
+            <div class="stats__block-item-title">LANGUAGE</div>
+            <div class="stats__block-item-value">EN</div>
+            <div class="stats__block-item-description">
+                +10 more
+            </div>
+        </div>
+        <div class="stats__block-item">
+            <div class="stats__block-item-title">SIZE</div>
+            <div class="stats__block-item-value">12</div>
+            <div class="stats__block-item-description">
+                MB
+            </div>
         </div>
     </div>
 
-    <div id="stage-modal" class="modal">
-        <div class="modal-wrap">
-            <div class="modal-content">
-                <div class="modal__head">
-                    <span data-translation-key="modalHead"></span>
-                    <span class="modal__close">&#215;</span>
-                </div>
-                <div class="modal__body">
-                    <div>
-                        <div><span class="modal__result"></span><span class="modal__result-text">is yours!</span></div>
+    <div class="images__block">
+        <div class="images__block-item">
+            <img src="./img/1.png" alt="" class="images__block-img">
+        </div>
+        <div class="images__block-item">
+            <img src="./img/2.png" alt="" class="images__block-img">
+        </div>
+        <div class="images__block-item">
+            <img src="./img/3.png" alt="" class="images__block-img">
+        </div>
+        <div class="images__block-item">
+            <img src="./img/4.png" alt="" class="images__block-img">
+        </div>
+        <div class="images__block-item">
+            <img src="./img/5.png" alt="" class="images__block-img">
+        </div>
+        <div class="images__block-item">
+            <img src="./img/6.png" alt="" class="images__block-img">
+        </div>
+    </div>
+    <div class="devider__wrapper">
+        <div class="devider"></div>
+    </div>
+    <div class="text__block">
+        <div class="text__wrapper">
+            Dive into the Neon Pulse of Vegas, Wherever You Are
+            More than just games, our mobile casino app is your portal to the electrifying atmosphere of Las Vegas.
+            Imagine the dazzling lights, the clinking of chips, and the roar of the crowd – now, experience it all right
+            in your palm.
+            <br>
+            <br>
+            Unleash a universe of entertainment
+            <br>
+            <br>
 
-                        <div class="modal__info" data-translation-key="modalStageInfo"></div>
+            Cutting-edge slots: Spin and win with an ever-expanding collection of innovative slot machines, featuring
+            immersive themes, captivating storylines, and jaw-dropping jackpots.
+            <br>
+            <br>
+            Classic table games: Perfect your poker face, master the roulette wheel, or strategize your way to blackjack
+            victory with our selection of timeless casino favorites.
+            <br>
+            <br>
+            Live dealer magic: Feel the buzz of a real casino floor with our live dealer tables, where professional
+            croupiers bring the Vegas magic directly to your screen.
+            <br>
+            <br>
+            Beyond the games
+            <br>
+            <br>
+            Tournament thrills: Test your skills against other players in daily tournaments, climb the leaderboards, and
+            bag exclusive rewards that elevate your gameplay.
+            <br>
+            <br>
+            Social buzz: Connect with fellow casino enthusiasts through interactive features, share your wins, and
+            celebrate the excitement together.
+            <br>
+            <br>
+            Peace of mind, always
+            <br>
+            <br>
+            Safety first: Enjoy the highest levels of security with industry-leading encryption and responsible gaming
+            tools that keep your experience safe and secure.
+            <br>
+            <br>
+            Support that shines: Our dedicated support team is here 24/7 to answer your questions and ensure a smooth,
+            enjoyable journey.
+            <br>
+            <br>
+            Ready to join the party? Download the app today, claim your welcome bonus, and start exploring the endless
+            possibilities that await. It's more than just a game; it's your mobile Vegas escape!
+        </div>
+        <div class="more__btn" id="more_btn">more</div>
+    </div>
+    <div class="devinfo__block">
+        <div class="devinfo__name">IGAMING AGENCY
+        </div>
+        <div class="devinfo__position">Developer</div>
+    </div>
+
+    <div class="devider__wrapper">
+        <div class="devider"></div>
+    </div>
+    <div class="rating__block">
+        <div class="rating__block-title">Ratings & Reviews</div>
+        <div class="rating__block-info">
+            <div class="rating__block-info-left">
+                <div class="rating__block-info-value">4.9</div>
+                <div class="rating__block-info-text">out of 5</div>
+            </div>
+            <div class="rating__block-info-right">
+                <div class="rating__block-info-items">
+                    <div class="rating__block-info-item">
+                        <div class="rating__block-info-item-stars">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="rating__block-info-item-bar">
+                            <div class="rating__block-info-item-bar-value" style="width: 122px;"></div>
+                        </div>
                     </div>
-                    <div class="modal__btn" data-translation-key="modalStageBtn"></div>
+                    <div class="rating__block-info-item">
+                        <div class="rating__block-info-item-stars">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="rating__block-info-item-bar">
+                            <div class="rating__block-info-item-bar-value" style="width: 26px;"></div>
+                        </div>
+                    </div>
+                    <div class="rating__block-info-item">
+                        <div class="rating__block-info-item-stars">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="rating__block-info-item-bar">
+                            <div class="rating__block-info-item-bar-value" style="width: 9px;"></div>
+                        </div>
+                    </div>
+                    <div class="rating__block-info-item">
+                        <div class="rating__block-info-item-stars">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="rating__block-info-item-bar">
+                            <div class="rating__block-info-item-bar-value" style="width: 5px;"></div>
+                        </div>
+                    </div>
+                    <div class="rating__block-info-item">
+                        <div class="rating__block-info-item-stars">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
+                                <g clip-path="url(#clip0_1_2679)">
+                                    <path d="M2.07483 2.09767L2.6345 0.269174C2.74491 -0.0897247 3.25509 -0.0897247 3.36169 0.269174L3.92517 2.09767H5.61942C5.98873 2.09767 6.14102 2.5699 5.84025 2.78147L4.45439 3.76371L4.99883 5.50532C5.10924 5.85666 4.69806 6.14 4.40489 5.91711L3 4.8593L1.59511 5.92089C1.30194 6.14378 0.890755 5.86044 1.00117 5.5091L1.54561 3.76749L0.159753 2.78524C-0.141023 2.5699 0.0112686 2.10145 0.380577 2.10145H2.07483V2.09767Z"
+                                          fill="#8E8D92"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1_2679">
+                                        <rect width="6" height="6" fill="white" transform="matrix(-1 0 0 1 6 0)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="rating__block-info-item-bar">
+                            <div class="rating__block-info-item-bar-value" style="width: 4px;"></div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="rating__counter">29 401 Ratings</div>
+            </div>
+        </div>
+
+    </div>
+    <div class="reviews">
+        <div class="review">
+            <div class="review__head">
+                <div class="review__head-item">
+                    <div class="review__head-item-title">Convenient and Fast App</div>
+                    <div class="review__head-item-value">08.03.26</div>
+                </div>
+                <div class="review__head-item">
+                    <div class="review__head-item-stars">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="review__head-item-value">TrushBrad3994</div>
+                </div>
+            </div>
+            <div class="review__body">
+                I really like this app. The interface is clear and everything works quickly without any lag. It’s very
+                easy to use and you can find everything you need in just a few seconds.
+            </div>
+        </div>
+        <div class="review">
+            <div class="review__head">
+                <div class="review__head-item">
+                    <div class="review__head-item-title">Great Experience Using It</div>
+                    <div class="review__head-item-value">12.03.26</div>
+                </div>
+                <div class="review__head-item">
+                    <div class="review__head-item-stars">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="review__head-item-value">BobSnail33</div>
+                </div>
+            </div>
+            <div class="review__body">
+                The app pleasantly surprised me — everything is clean and intuitive. It runs smoothly and is very easy
+                to use. You can tell the developers put a lot of effort into making it user-friendly.
+            </div>
+        </div>
+        <div class="review">
+            <div class="review__head">
+                <div class="review__head-item">
+                    <div class="review__head-item-title">Top slots</div>
+                    <div class="review__head-item-value">05.03.26</div>
+                </div>
+                <div class="review__head-item">
+                    <div class="review__head-item-stars">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <g clip-path="url(#clip0_1_2735)">
+                                <path d="M7.85035 4.19534L6.731 0.538348C6.51018 -0.179449 5.48982 -0.179449 5.27661 0.538348L4.14965 4.19534H0.761154C0.0225372 4.19534 -0.282047 5.13981 0.319507 5.56293L3.09122 7.52743L2.00233 11.0106C1.78151 11.7133 2.60389 12.28 3.19021 11.8342L6 9.7186L8.80979 11.8418C9.39611 12.2876 10.2185 11.7209 9.99767 11.0182L8.90878 7.53498L11.6805 5.57049C12.282 5.13981 11.9775 4.20289 11.2388 4.20289H7.85035V4.19534Z"
+                                      fill="#EE8834"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_2735">
+                                    <rect width="12" height="12" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="review__head-item-value">FelixTheFox87</div>
+                </div>
+            </div>
+            <div class="review__body">
+                Responsible company, they let you play and enjoy, but they also keep sending emails to remind you to
+                manage your account and bet responsibly. Withdrawals are easy, and I’ve never had any issues when it
+                came to winning. Play carefully and don’t bet more than you can afford. Other than that, I would
+                recommend it.
             </div>
         </div>
     </div>
-</div>
-
-<div id="final-modal" class="modal">
-    <div class="modal-wrap">
-        <div class="modal-content">
-            <div class="modal__head">
-                <span data-translation-key="modalHead"></span>
-            </div>
-            <div class="modal__body">
-                <div>
-                    <div><span class="modal__result"></span><span class="modal__result-text">is yours!</span></div>
-                    <div class="modal__info" data-translation-key="modalStageInfo"></div>
-                </div>
-
-                <input type="submit" id="regBtn" class="popup__win-btn regBtn go modal__btn" name="go"
-                       data-translation-key="modalStageBtn">
-
-            </div>
+    <div class="devider__wrapper">
+        <div class="devider"></div>
+    </div>
+    <div class="privacy__block">
+        <div class="privacy__block-head">
+            <div class="privacy__block-title">App Privacy</div>
+            <a href="#" class="privacy__block-btn">Read More</a>
+        </div>
+        <div class="privacy__block-text">
+            The developer, <span>IGAMING AGENCY</span>, indicated that the app's privacy practices may include handling
+            of data as described below. For more information, see the <a href="#">developer's privacy policy.</a>
+        </div>
+        <div class="privacy__collected-block">
+            <img src="./img/icon.svg" alt="">
+            <div class="privacy__collected-title">Data Not Collected</div>
+            <div class="privacy__collected-text">The developer does not collect any data from this app.</div>
+        </div>
+        <div class="privacy__block-text">
+            Privacy practices may vary based on, for example, the features you use or your age. <a href="#">Read
+            More.</a>
         </div>
     </div>
+    <div class="devider__wrapper">
+        <div class="devider"></div>
+    </div>
+    <div class="information__block">
+        <div class="information__block-title">
+            Information
+        </div>
+        <div class="information__block-items">
+            <div class="information__block-item">
+                <div class="information__block-item-key">Provider</div>
+                <div class="information__block-item-value">IGAMING AGENCY</div>
+            </div>
+            <div class="table__devider"></div>
+            <div class="information__block-item">
+                <div class="information__block-item-key">Size</div>
+                <div class="information__block-item-value">12 MB</div>
+            </div>
+            <div class="table__devider"></div>
+
+            <div class="information__block-item">
+                <div class="information__block-item-key">Category</div>
+                <div class="information__block-item-value">#1 top in Casino</div>
+            </div>
+            <div class="table__devider"></div>
+
+            <div class="information__block-item">
+                <div class="information__block-item-key">Compatibility</div>
+                <div class="information__block-item-value">Works on this iPhone</div>
+            </div>
+            <div class="table__devider"></div>
+
+            <div class="information__block-item">
+                <div class="information__block-item-key">Languages</div>
+                <div class="information__block-item-value">English and 44 more</div>
+            </div>
+
+            <div class="table__devider"></div>
+
+            <div class="information__block-item">
+                <div class="information__block-item-key">Age Rating</div>
+                <div class="information__block-item-value">18+</div>
+            </div>
+            <div class="table__devider"></div>
+
+            <div class="information__block-item">
+                <div class="information__block-item-key">Copyright</div>
+                <div class="information__block-item-value">IGAMING AGENCY</div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
-
-<script src="./js/jquery-3.6.3.min.js"></script>
-<script src="./js/gsap.min.js"></script>
-<script type="module" src="./js/script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
-
 
 <dialog id="iosBrowserModal" class="ios-modal">
     <div class="ios-modal-content">
@@ -90,5 +1291,81 @@
         </div>
     </div>
 </dialog>
+<div id="window-open-external-browser">
+Открыть через 3 точки
+</div>
+
+
+<button id="openInstructions" type="button" style="display:none;">Open iOS instructions</button>
+<p id="targetUrlText" style="display:none;"></p>
+<div class="popup__overlay" id="iosInstructionsDialog" style="display:none;">
+    <div class="popup">
+        <div class="popup__title">
+            Installing the app
+        </div>
+        <div class="popup__head-wrapper">
+            <div class="popup__head">
+                <div class="popup__head-left">
+                    <img src="./img/logo.png" alt="" class="popup__logo">
+                </div>
+                <div class="popup__head-right">
+                    <div class="popup_head-title">Patrick Spins</div>
+                    <div class="popup_head-description">Dive into the Neon Pulse of...</div>
+                </div>
+            </div>
+            <div class="table__devider"></div>
+        </div>
+
+        <div class="popup__list">
+            <div class="popup__list-item">
+                <div class="popup__list-counter">1.</div>
+                <div class="popup__list-text">Tap
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M9.19537 6.02209V7.59361H10.8047V6.02209H9.19537Z" fill="#3478F6"/>
+                        <path d="M17.4994 9.05535V16.1334C17.4994 17.8023 16.1019 19.1667 14.3933 19.1667H5.60612C3.89744 19.1667 2.5 17.8016 2.5 16.1334V9.05535C2.5 7.38647 3.89744 6.02209 5.60612 6.02209H8.17601C8.29413 6.02209 8.39038 6.11619 8.39038 6.23185V7.38451C8.39038 7.49952 8.29351 7.59427 8.17601 7.59427H5.60612C4.77991 7.59427 4.10931 8.24901 4.10931 9.05601V16.3438C4.10931 17.0351 4.68616 17.5958 5.39175 17.5958H14.6082C15.3138 17.5958 15.8907 17.0351 15.8907 16.3438V9.05601C15.8907 8.24901 15.2201 7.59427 14.3939 7.59427H11.824C11.7059 7.59427 11.6096 7.50017 11.6096 7.38451V6.23185C11.6096 6.11684 11.7065 6.02209 11.824 6.02209H14.3939C16.1026 6.02209 17.4994 7.38713 17.4994 9.05535Z"
+                              fill="#3478F6"/>
+                        <path d="M10.8047 3.34309V12.8643C10.8047 13.2989 10.4453 13.6504 9.99973 13.6504C9.55412 13.6504 9.19476 13.2995 9.19476 12.8643V3.34309C9.19476 2.90856 9.55412 2.55701 9.99973 2.55701C10.4453 2.55701 10.8047 2.9079 10.8047 3.34309Z"
+                              fill="#3478F6"/>
+                        <path d="M12.1401 4.49508C11.9333 4.49508 11.727 4.41928 11.5714 4.26441L9.43086 2.17406C9.11712 1.8676 9.11712 1.36968 9.43086 1.06322C9.7446 0.756758 10.2546 0.756758 10.5683 1.06322L12.7088 3.15357C13.0226 3.46003 13.0226 3.95795 12.7088 4.26441C12.5507 4.41928 12.347 4.49508 12.1401 4.49508Z"
+                              fill="#3478F6"/>
+                        <path d="M7.85927 4.49508C7.65302 4.49508 7.44616 4.41928 7.29054 4.26441C6.9768 3.95795 6.9768 3.46003 7.29054 3.15357L9.43108 1.06322C9.74481 0.756758 10.2548 0.756758 10.5685 1.06322C10.8823 1.36968 10.8823 1.8676 10.5685 2.17406L8.42799 4.26441C8.26987 4.41928 8.06613 4.49508 7.85927 4.49508Z"
+                              fill="#3478F6"/>
+                    </svg>
+                    in the menu bar.
+                </div>
+            </div>
+            <div class="popup__list-item">
+                <div class="popup__list-counter">2.</div>
+                <div class="popup__list-text">Scroll down the list of options, then tap
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M16.7382 3.30786C15.8847 2.45429 14.6793 2.32001 13.2561 2.32001H6.72717C5.32109 2.32001 4.11574 2.45394 3.26181 3.30786C2.40788 4.16179 2.28217 5.35858 2.28217 6.75644V13.2186C2.28217 14.65 2.40752 15.8386 3.26145 16.6922C4.11538 17.5457 5.32074 17.68 6.75181 17.68H13.2557C14.679 17.68 15.8843 17.5461 16.7379 16.6922C17.5918 15.8386 17.7172 14.65 17.7172 13.2186V6.78144C17.7172 5.35001 17.5922 4.15286 16.7382 3.30786ZM16.3697 6.54715V13.4447C16.3697 14.315 16.2607 15.2022 15.759 15.7129C15.2482 16.215 14.344 16.3322 13.4818 16.3322H6.51752C5.65538 16.3322 4.75145 16.215 4.24931 15.7129C3.73859 15.2022 3.62967 14.315 3.62967 13.4443V6.57251C3.62967 5.69394 3.73859 4.78965 4.24074 4.28751C4.75145 3.77679 5.66359 3.66822 6.54252 3.66822H13.4818C14.344 3.66822 15.2479 3.78536 15.7586 4.28751C16.2607 4.79822 16.3697 5.68501 16.3697 6.54715ZM10 14.4657C10.335 14.4657 10.6029 14.2061 10.6029 13.8714V10.5986H13.8757C14.2104 10.5986 14.4782 10.3139 14.4782 10.0043C14.4782 9.67786 14.2104 9.40144 13.8757 9.40144H10.6029V6.12036C10.6029 5.78536 10.335 5.52608 10 5.52608C9.92166 5.52492 9.84386 5.53951 9.77124 5.56896C9.69862 5.59842 9.63264 5.64215 9.57722 5.69757C9.52181 5.75298 9.47808 5.81896 9.44862 5.89158C9.41916 5.96421 9.40458 6.042 9.40574 6.12036V9.40144H6.13288C5.79788 9.40144 5.53002 9.67786 5.53002 10.0043C5.53002 10.3139 5.79788 10.5986 6.13288 10.5986H9.40574V13.8714C9.40574 14.2061 9.66538 14.4657 10 14.4657Z"
+                              fill="#3478F6"/>
+                    </svg>
+                    Add to Home Screen.
+
+                </div>
+            </div>
+            <div class="popup__list-item">
+                <div class="popup__list-counter">3.</div>
+                <div class="popup__list-text">Find the icon <img src="./img/logo.png" class="popup__list-text-icon"
+                                                                 alt=""> on the home screen.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    loadMoreFunc = (event) => {
+        document.querySelector('.text__block').classList.add('expand')
+    }
+    let loadMoreBtn = document.querySelector('#more_btn');
+    loadMoreBtn.addEventListener('click', loadMoreFunc);
+
+</script>
+<script src="./app.js"></script>
+<script src="./script.js"></script>
 </body>
 </html>
