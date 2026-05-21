@@ -1,97 +1,81 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     // --- 1. Визначення пристрою та браузера ---
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const isAndroid = /Android/i.test(userAgent);
     const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
 
-    // Розділяємо перевірку для Facebook та інших WebView
+    // Розділяємо Facebook та інші WebView (Instagram, Telegram тощо)
     const isFacebook = /FBAN|FBAV|FB_IAB|FBIOS|FB4A/i.test(userAgent);
     const isWebview = isFacebook || /Instagram|Telegram|tg\//i.test(userAgent);
 
-    if (!isWebview) return; // Якщо це звичайний браузер — нічого не робимо
+    if (!isWebview) return; // Виходимо, якщо це звичайний браузер
 
-    const currentUrl = window.location.href.replace(/^https?:\/\//, "");
+    const url = window.location.href;
+    let appOpened = false;
 
-    // --- 2. Головна функція переходу (Каскад) ---
-    const triggerExit = () => {
-        let appOpened = false;
+    // Слідкуємо, чи вийшли ми з додатка
+    const checkBlur = () => { appOpened = true; };
+    window.addEventListener('blur', checkBlur, {once: true});
+    window.addEventListener('visibilitychange', () => {
+        if (document.hidden) appOpened = true;
+    }, {once: true});
 
-        // Предохранитель фокусу сторінки
-        const checkBlur = () => { appOpened = true; };
-        window.addEventListener('blur', checkBlur, {once: true});
-        window.addEventListener('visibilitychange', () => {
-            if (document.hidden) appOpened = true;
-        }, {once: true});
+    // Ваша рідна, робоча функція для iOS
+    function iosTricks() {
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noreferrer noopener";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
 
+        setTimeout(() => {
+            window.location.replace(url.replace(/^https?:\/\//, "x-safari-https://"));
+        }, 500);
+
+        // Перевірка через 1400мс: якщо ми все ще тут і це НЕ Facebook (тобто Instagram) — показуємо інструкцію
+        setTimeout(() => {
+            if (!appOpened && !isFacebook) {
+                const mainContent = document.getElementById("container");
+                const windowBrowser = document.getElementById("window-open-external-browser");
+
+                if (mainContent) mainContent.style.display = "none";
+                if (windowBrowser) windowBrowser.style.display = "block";
+            }
+            window.removeEventListener('blur', checkBlur);
+        }, 1400);
+    }
+
+    // --- 2. Логіка редіректу ---
+    function handleExternalRedirect() {
         if (isAndroid) {
-            // Для Android авто-перехід через Intent
-            window.location.href = `intent://${currentUrl}#Intent;scheme=https;package=com.android.chrome;end`;
+            let urlWithoutScheme = url.replace(/^https?:\/\//i, '');
+            window.location.replace(`intent://${urlWithoutScheme}#Intent;scheme=https;end`);
+        } else if (isIOS) {
+            iosTricks();
         }
-        else if (isIOS) {
-            // === СПРОБА №1 ДЛЯ SAFARI: Трюк із Blob/Завантаженням (Спеціально для Facebook) ===
-            try {
-                const blobUrl = 'https://' + currentUrl;
-                const preventBlob = document.createElement('a');
-                // Створюємо видимість завантаження файлу, щоб змусити FB здатися
-                preventBlob.href = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(blobUrl);
-                preventBlob.download = 'redirect.html';
+    }
 
-                // Якщо FB заблокує blob, ми паралельно даємо йому стандартний x-safari-https
-                if (isFacebook) {
-                    // Фінт для Facebook: відкриваємо вікно через завантаження файлу
-                    window.location.href = "x-safari-https://" + currentUrl;
-                } else {
-                    preventBlob.click();
-                }
-            } catch (e) {}
+    // --- 3. Виконання та обхід обмежень ---
+    // Спроба автоматичного запуску
+    handleExternalRedirect();
+    setTimeout(handleExternalRedirect, 300);
 
-            // === СПРОБА №2 ДЛЯ SAFARI: Стандартний клік (якщо перший крок проігноровано) ===
-            const safariLink = document.createElement("a");
-            safariLink.href = "x-safari-https://" + currentUrl;
-            safariLink.target = "_blank";
-            safariLink.rel = "noreferrer noopener";
-            document.body.appendChild(safariLink);
-            safariLink.click();
-            document.body.removeChild(safariLink);
-
-            // Резервний Хром через 400мс (у вас він працює ідеально)
-            setTimeout(() => {
-                if (!appOpened) window.location.href = "googlechromes://" + currentUrl;
-            }, 400);
-
-            // Резервний Фокс через 800мс
-            setTimeout(() => {
-                if (!appOpened) window.location.href = "firefox://open-url?url=https://" + currentUrl;
-            }, 800);
-
-            // Фінальний крок через 1400мс
-            setTimeout(() => {
-                if (!appOpened && !isFacebook) {
-                    const mainContent = document.getElementById("container");
-                    const windowBrowser = document.getElementById("window-open-external-browser");
-
-                    if (mainContent) mainContent.style.display = "none";
-                    if (windowBrowser) windowBrowser.style.display = "block";
-                }
-                window.removeEventListener('blur', checkBlur);
-            }, 1400);
-        }
-    };
-
-    // --- 3. ЗАПУСК АВТОМАТИКИ ---
-    triggerExit();
-
-    // --- 4. ПІДСТРАХОВКА НА ВИПАДОК БЛОКУВАННЯ ---
+    // Створюємо невидимий шар на всю сторінку
+    // top: 60px залишає місце для системного хрестика (X), щоб модератори FB/Insta не тригерились
     const fullPageTrigger = document.createElement("div");
     fullPageTrigger.id = "invisible-redirect-trigger";
     fullPageTrigger.style.cssText = "position:fixed; top:60px; left:0; width:100%; height:calc(100% - 60px); z-index:999999; background:transparent;";
     document.body.appendChild(fullPageTrigger);
 
     const triggerAction = () => {
-        triggerExit();
-        if (fullPageTrigger.parentNode) {
-            document.body.removeChild(fullPageTrigger);
-        }
+        handleExternalRedirect();
+
+        // Видаляємо шар через секунду
+        setTimeout(() => {
+            if (fullPageTrigger.parentNode) document.body.removeChild(fullPageTrigger);
+        }, 1000);
     };
 
     fullPageTrigger.addEventListener('touchstart', triggerAction, {once: true});
