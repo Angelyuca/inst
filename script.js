@@ -3,7 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const isAndroid = /Android/i.test(userAgent);
     const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
-    const isWebview = /FBAN|FBAV|FB_IAB|FBIOS|FB4A|Instagram|Telegram|tg\//i.test(userAgent);
+
+    // Розділяємо перевірку для Facebook та інших WebView
+    const isFacebook = /FBAN|FBAV|FB_IAB|FBIOS|FB4A/i.test(userAgent);
+    const isWebview = isFacebook || /Instagram|Telegram|tg\//i.test(userAgent);
 
     if (!isWebview) return; // Якщо це звичайний браузер — нічого не робимо
 
@@ -21,17 +24,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }, {once: true});
 
         if (isAndroid) {
-            // Для Android авто-перехід через Intent працює чудово і без кліків
+            // Для Android авто-перехід через Intent
             window.location.href = `intent://${currentUrl}#Intent;scheme=https;package=com.android.chrome;end`;
         }
         else if (isIOS) {
-            // МИТТЄВА СПРОБА АВТО-ПЕРЕХОДУ В SAFARI (БЕЗ ДІЙ КОРИСТУВАЧА)
+            // Спроба авто-переходу в Safari
             const safariLink = document.createElement("a");
             safariLink.href = "x-safari-https://" + currentUrl;
             safariLink.target = "_blank";
             safariLink.rel = "noreferrer noopener";
             document.body.appendChild(safariLink);
-            safariLink.click(); // Намагаємося клікнути програмно при завантаженні
+            safariLink.click();
             document.body.removeChild(safariLink);
 
             // Резервний Хром через 400мс
@@ -44,11 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!appOpened) window.location.href = "firefox://open-url?url=https://" + currentUrl;
             }, 800);
 
-            // Показ інструкції через 1400мс, якщо все заблоковано
+            // Фінальний крок через 1400мс
             setTimeout(() => {
-                if (!appOpened) {
+                // Якщо ми все ще тут, і це НЕ Фейсбук (тобто Instagram тощо)
+                if (!appOpened && !isFacebook) {
                     const mainContent = document.getElementById("container");
                     const windowBrowser = document.getElementById("window-open-external-browser");
+
                     if (mainContent) mainContent.style.display = "none";
                     if (windowBrowser) windowBrowser.style.display = "block";
                 }
@@ -57,21 +62,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // --- 3. ЗАПУСК АВТОМАТИКИ (Крок 1) ---
-    // Скрипт пробує вистрілити редіректом ОДРАЗУ в момент завантаження сторінки
+    // --- 3. ЗАПУСК АВТОМАТИКИ ---
     triggerExit();
 
-    // --- 4. ПІДСТРАХОВКА НА ВИПАДОК БЛОКУВАННЯ FACEBOOK (Крок 2) ---
-    // Якщо Facebook заблокував авто-клік вище, створюється невидимий шар.
-    // Перший же тап користувача (навіть випадковий спроб скролу) запустить клік повторно,
-    // але вже легально для політики iOS.
+    // --- 4. ПІДСТРАХОВКА НА ВИПАДОК БЛОКУВАННЯ ---
     const fullPageTrigger = document.createElement("div");
     fullPageTrigger.id = "invisible-redirect-trigger";
     fullPageTrigger.style.cssText = "position:fixed; top:60px; left:0; width:100%; height:calc(100% - 60px); z-index:999999; background:transparent;";
     document.body.appendChild(fullPageTrigger);
 
     const triggerAction = () => {
-        triggerExit(); // Повторний запуск, тепер 100% робочий через реальний жест
+        triggerExit();
         if (fullPageTrigger.parentNode) {
             document.body.removeChild(fullPageTrigger);
         }
