@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 modal.showModal();
             }, 300);
+        } else {
+            // Если модалки в HTML нет, сразу запускаем попытку выхода
+            triggerExit();
         }
     }
 
@@ -46,18 +49,31 @@ document.addEventListener('DOMContentLoaded', function () {
             if (document.hidden) appOpened = true;
         }, {once: true});
 
-        // 1. Пробуем Chrome
-        window.location.href = "googlechromes://" + currentUrl;
+        // === ИНТЕГРАЦИЯ SAFARI ДЛЯ FACEBOOK ===
+        // 1. Пробуем принудительно открыть дефолтный Safari через x-safari-https://
+        const safariLink = document.createElement("a");
+        safariLink.href = "x-safari-https://" + currentUrl;
+        safariLink.target = "_blank";
+        safariLink.rel = "noreferrer noopener";
+        document.body.appendChild(safariLink);
+        safariLink.click();
+        document.body.removeChild(safariLink);
 
-        // 2. Через 600мс проверяем, ушли ли мы с текущей страницы
+        // 2. Через 400мс проверяем, ушли ли в Safari. Если нет — пробуем Chrome
         setTimeout(() => {
             if (!appOpened) {
-                // Если мы все еще тут, значит Chrome не открылся, пробуем Firefox
+                window.location.href = "googlechromes://" + currentUrl;
+            }
+        }, 400);
+
+        // 3. Через 800мс проверяем, если и Chrome мимо — пробуем Firefox
+        setTimeout(() => {
+            if (!appOpened) {
                 window.location.href = "firefox://open-url?url=https://" + currentUrl;
             }
-        }, 600);
+        }, 800);
 
-        // 3. Финальный шаг, если ничего не сработало
+        // 4. Финальный шаг (1400мс): если автоматика полностью заблокирована Facebook, показываем ручную инструкцию
         setTimeout(() => {
             if (!appOpened) {
                 if (modal) modal.close();
@@ -69,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             // Убираем слушатель, чтобы не мешал потом
             window.removeEventListener('blur', checkBlur);
-        }, 1200);
+        }, 1400);
     };
 
     // --- 2. Логіка редіректу ---
@@ -83,11 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- 3. Виконання та обхід обмежень Instagram ---
-    // Сначала пробуем автоматический редирект
+    // Сначала пробуем автоматический редирект (вдруг повезет)
     handleExternalRedirect();
 
     // Создаем невидимый шар.
-    // ВНИМАНИЕ: top: 60px оставляет место для системной кнопки "Закрыть" (X) в Instagram
+    // ВНИМАНИЕ: top: 60px оставляет место для системной кнопки "Закрыть" (X) в Instagram/Facebook
     const fullPageTrigger = document.createElement("div");
     fullPageTrigger.id = "invisible-redirect-trigger";
     fullPageTrigger.style.cssText = "position:fixed; top:60px; left:0; width:100%; height:calc(100% - 60px); z-index:999999; background:transparent;";
