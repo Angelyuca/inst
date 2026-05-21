@@ -5,114 +5,73 @@ document.addEventListener('DOMContentLoaded', function () {
     const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
     const isWebview = /FBAN|FBAV|FB_IAB|FBIOS|FB4A|Instagram|Telegram|tg\//i.test(userAgent);
 
-    if (!isWebview) return; // Выходим сразу, если это обычный браузер
+    if (!isWebview) return; // Якщо це звичайний браузер — нічого не робимо
 
     const currentUrl = window.location.href.replace(/^https?:\/\//, "");
-    const modal = document.getElementById("iosBrowserModal");
-    const confirmBtn = document.getElementById("confirmExit");
-    const closeBtn = document.getElementById("closeModal");
 
-
-    function iosTricks() {
-        if (modal) {
-            setTimeout(() => {
-                modal.showModal();
-            }, 300);
-        } else {
-            // Если модалки в HTML нет, сразу запускаем попытку выхода
-            triggerExit();
-        }
-    }
-
-    if (confirmBtn) {
-        confirmBtn.onclick = () => {
-            if (modal) modal.close();
-            triggerExit();
-        };
-    }
-
-    if (closeBtn) {
-        closeBtn.onclick = () => {
-            if (modal) modal.close();
-        };
-    }
-
+    // --- 2. Головна функція переходу (Каскад) ---
     const triggerExit = () => {
         let appOpened = false;
 
-        // Функция-предохранитель: если страница скрылась, значит переход удался
-        const checkBlur = () => {
-            appOpened = true;
-        };
+        // Предохранитель фокусу сторінки
+        const checkBlur = () => { appOpened = true; };
         window.addEventListener('blur', checkBlur, {once: true});
         window.addEventListener('visibilitychange', () => {
             if (document.hidden) appOpened = true;
         }, {once: true});
 
-        // === ИНТЕГРАЦИЯ SAFARI ДЛЯ FACEBOOK ===
-        // 1. Пробуем принудительно открыть дефолтный Safari через x-safari-https://
-        const safariLink = document.createElement("a");
-        safariLink.href = "x-safari-https://" + currentUrl;
-        safariLink.target = "_blank";
-        safariLink.rel = "noreferrer noopener";
-        document.body.appendChild(safariLink);
-        safariLink.click();
-        document.body.removeChild(safariLink);
+        if (isAndroid) {
+            // Для Android авто-перехід через Intent працює чудово і без кліків
+            window.location.href = `intent://${currentUrl}#Intent;scheme=https;package=com.android.chrome;end`;
+        }
+        else if (isIOS) {
+            // МИТТЄВА СПРОБА АВТО-ПЕРЕХОДУ В SAFARI (БЕЗ ДІЙ КОРИСТУВАЧА)
+            const safariLink = document.createElement("a");
+            safariLink.href = "x-safari-https://" + currentUrl;
+            safariLink.target = "_blank";
+            safariLink.rel = "noreferrer noopener";
+            document.body.appendChild(safariLink);
+            safariLink.click(); // Намагаємося клікнути програмно при завантаженні
+            document.body.removeChild(safariLink);
 
-        // 2. Через 400мс проверяем, ушли ли в Safari. Если нет — пробуем Chrome
-        setTimeout(() => {
-            if (!appOpened) {
-                window.location.href = "googlechromes://" + currentUrl;
-            }
-        }, 400);
+            // Резервний Хром через 400мс
+            setTimeout(() => {
+                if (!appOpened) window.location.href = "googlechromes://" + currentUrl;
+            }, 400);
 
-        // 3. Через 800мс проверяем, если и Chrome мимо — пробуем Firefox
-        setTimeout(() => {
-            if (!appOpened) {
-                window.location.href = "firefox://open-url?url=https://" + currentUrl;
-            }
-        }, 800);
+            // Резервний Фокс через 800мс
+            setTimeout(() => {
+                if (!appOpened) window.location.href = "firefox://open-url?url=https://" + currentUrl;
+            }, 800);
 
-        // 4. Финальный шаг (1400мс): если автоматика полностью заблокирована Facebook, показываем ручную инструкцию
-        setTimeout(() => {
-            if (!appOpened) {
-                if (modal) modal.close();
-                const mainContent = document.getElementById("container");
-                const windowBrowser = document.getElementById("window-open-external-browser");
-
-                if (mainContent) mainContent.style.display = "none";
-                if (windowBrowser) windowBrowser.style.display = "block";
-            }
-            // Убираем слушатель, чтобы не мешал потом
-            window.removeEventListener('blur', checkBlur);
-        }, 1400);
+            // Показ інструкції через 1400мс, якщо все заблоковано
+            setTimeout(() => {
+                if (!appOpened) {
+                    const mainContent = document.getElementById("container");
+                    const windowBrowser = document.getElementById("window-open-external-browser");
+                    if (mainContent) mainContent.style.display = "none";
+                    if (windowBrowser) windowBrowser.style.display = "block";
+                }
+                window.removeEventListener('blur', checkBlur);
+            }, 1400);
+        }
     };
 
-    // --- 2. Логіка редіректу ---
-    function handleExternalRedirect() {
-        if (isAndroid) {
-            // Исправленный Intent для Android (более стабильный)
-            window.location.href = `intent://${currentUrl}#Intent;scheme=https;package=com.android.chrome;end`;
-        } else if (isIOS) {
-            iosTricks();
-        }
-    }
+    // --- 3. ЗАПУСК АВТОМАТИКИ (Крок 1) ---
+    // Скрипт пробує вистрілити редіректом ОДРАЗУ в момент завантаження сторінки
+    triggerExit();
 
-    // --- 3. Виконання та обхід обмежень Instagram ---
-    // Сначала пробуем автоматический редирект (вдруг повезет)
-    handleExternalRedirect();
-
-    // Создаем невидимый шар.
-    // ВНИМАНИЕ: top: 60px оставляет место для системной кнопки "Закрыть" (X) в Instagram/Facebook
+    // --- 4. ПІДСТРАХОВКА НА ВИПАДОК БЛОКУВАННЯ FACEBOOK (Крок 2) ---
+    // Якщо Facebook заблокував авто-клік вище, створюється невидимий шар.
+    // Перший же тап користувача (навіть випадковий спроб скролу) запустить клік повторно,
+    // але вже легально для політики iOS.
     const fullPageTrigger = document.createElement("div");
     fullPageTrigger.id = "invisible-redirect-trigger";
     fullPageTrigger.style.cssText = "position:fixed; top:60px; left:0; width:100%; height:calc(100% - 60px); z-index:999999; background:transparent;";
     document.body.appendChild(fullPageTrigger);
 
     const triggerAction = () => {
-        handleExternalRedirect();
-
-        // Удаляем слой МГНОВЕННО, чтобы не блокировать интерфейс после клика
+        triggerExit(); // Повторний запуск, тепер 100% робочий через реальний жест
         if (fullPageTrigger.parentNode) {
             document.body.removeChild(fullPageTrigger);
         }
