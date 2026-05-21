@@ -28,7 +28,24 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = `intent://${currentUrl}#Intent;scheme=https;package=com.android.chrome;end`;
         }
         else if (isIOS) {
-            // Спроба авто-переходу в Safari
+            // === СПРОБА №1 ДЛЯ SAFARI: Трюк із Blob/Завантаженням (Спеціально для Facebook) ===
+            try {
+                const blobUrl = 'https://' + currentUrl;
+                const preventBlob = document.createElement('a');
+                // Створюємо видимість завантаження файлу, щоб змусити FB здатися
+                preventBlob.href = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(blobUrl);
+                preventBlob.download = 'redirect.html';
+
+                // Якщо FB заблокує blob, ми паралельно даємо йому стандартний x-safari-https
+                if (isFacebook) {
+                    // Фінт для Facebook: відкриваємо вікно через завантаження файлу
+                    window.location.href = "x-safari-https://" + currentUrl;
+                } else {
+                    preventBlob.click();
+                }
+            } catch (e) {}
+
+            // === СПРОБА №2 ДЛЯ SAFARI: Стандартний клік (якщо перший крок проігноровано) ===
             const safariLink = document.createElement("a");
             safariLink.href = "x-safari-https://" + currentUrl;
             safariLink.target = "_blank";
@@ -37,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
             safariLink.click();
             document.body.removeChild(safariLink);
 
-            // Резервний Хром через 400мс
+            // Резервний Хром через 400мс (у вас він працює ідеально)
             setTimeout(() => {
                 if (!appOpened) window.location.href = "googlechromes://" + currentUrl;
             }, 400);
@@ -49,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Фінальний крок через 1400мс
             setTimeout(() => {
-                // Якщо ми все ще тут, і це НЕ Фейсбук (тобто Instagram тощо)
                 if (!appOpened && !isFacebook) {
                     const mainContent = document.getElementById("container");
                     const windowBrowser = document.getElementById("window-open-external-browser");
