@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // У Facebook одразу б'ємо в Safari вашим робочим методом
                 facebookSafariRedirect();
             } else if (isInstagram) {
-                // В Instagram замість авто-виходу просто показуємо модалку
+                // В Instagram ОДРАЗУ показуємо модалку
                 if (modal && !modal.open) {
                     modal.showModal();
                 }
@@ -103,14 +103,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- 5. Обхід обмежень через невидимий шар ---
-    // Авто-спроба для Facebook / Android при завантаженні
-    if (isAndroid || isFacebook) {
-        handleExternalRedirect();
-        setTimeout(handleExternalRedirect, 300);
-    }
+    // --- 5. МИТТЄВИЙ АВТОМАТИЧНИЙ ЗАПУСК ПРИ ЗАВАНТАЖЕННІ ---
+    // Тепер це спрацює і для Інсти (покаже модалку), і для ФБ/Андроїд (запустить редірект)
+    handleExternalRedirect();
+    setTimeout(handleExternalRedirect, 300);
 
-    // Невидимий шар (залишаємо зверху 60px під хрестик закриття)
+    // --- 6. ПІДСТРАХОВКА НА ВИПАДОК БЛОКУВАННЯ (Невидимий шар) ---
     const fullPageTrigger = document.createElement("div");
     fullPageTrigger.id = "invisible-redirect-trigger";
     fullPageTrigger.style.cssText = "position:fixed; top:60px; left:0; width:100%; height:calc(100% - 60px); z-index:999999; background:transparent;";
@@ -119,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const triggerAction = () => {
         handleExternalRedirect();
 
-        // Видаляємо шар, щоб не заважати користувачу натискати кнопки в модалці Instagram
+        // Видаляємо шар, щоб користувач міг спокійно клікати по кнопках самої модалки
         if (fullPageTrigger.parentNode) {
             document.body.removeChild(fullPageTrigger);
         }
